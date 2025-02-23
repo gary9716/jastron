@@ -4,8 +4,8 @@ import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 import { useEffect, useRef, useState } from "react";
 
 const ShaderBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -204,7 +204,7 @@ const ShaderBackground = () => {
     window.addEventListener("resize", resize);
     resize();
 
-    let startTime = Date.now();
+    const startTime = Date.now();
     const render = () => {
       const time = (Date.now() - startTime) * 0.001;
       gl.uniform1f(timeLocation, time);
@@ -237,52 +237,51 @@ const VideoSection = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [videoSize, setVideoSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
-    const handleLoadedMetadata = () => {
-      setVideoSize({
-        width: videoElement.videoWidth,
-        height: videoElement.videoHeight,
-      });
-    };
+    videoElement.load(); // 强制重新加载视频
 
     const handleLoadedData = () => {
       setIsLoaded(true);
       if (isVisible) {
-        videoElement.play().catch((error) => {
-          console.log("Initial play failed:", error);
-        });
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.log("Play failed:", error);
+          });
+        }
       }
     };
 
-    videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
     videoElement.addEventListener("loadeddata", handleLoadedData);
 
     return () => {
-      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
       videoElement.removeEventListener("loadeddata", handleLoadedData);
     };
-  }, [isVisible]);
+  }, [videoSrc, isVisible]);
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement || !isLoaded) return;
 
     if (isVisible) {
-      videoElement.play().catch((error) => {
-        console.log("Play failed:", error);
-      });
+      const playPromise = videoElement.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.log("Play failed:", error);
+        });
+      }
     } else {
       videoElement.pause();
+      videoElement.currentTime = 0; // 重置视频到开始位置
     }
   }, [isVisible, isLoaded]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-black/20 overflow-hidden">
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
       <div
         className={`transition-opacity duration-500 ${
           isVisible ? "opacity-100" : "opacity-0"
@@ -290,15 +289,11 @@ const VideoSection = ({
       >
         <video
           ref={videoRef}
-          className="max-w-full max-h-full w-auto h-auto object-contain"
+          className="w-full h-full object-cover"
           loop
           muted
           playsInline
           preload="auto"
-          style={{
-            width: videoSize.width ? `${videoSize.width}px` : "auto",
-            height: videoSize.height ? `${videoSize.height}px` : "auto",
-          }}
         >
           <source src={videoSrc} type="video/webm" />
         </video>
