@@ -141,7 +141,7 @@ const ServiceBlock = ({
       <h2 className="text-2xl md:text-3xl font-bold text-[#2598C6] mb-4 text-center lg:text-left">
         {title}
       </h2>
-      <p className="text-[#A3BDD0] text-base md:text-lg lg:text-xl leading-relaxed text-center lg:text-left max-w-3xl lg:max-w-none mx-auto lg:mx-0">
+      <p className="text-white text-base md:text-lg lg:text-xl leading-relaxed text-center lg:text-left max-w-3xl lg:max-w-none mx-auto lg:mx-0">
         {description}
       </p>
     </div>
@@ -249,7 +249,7 @@ const Home = () => {
                       打造專屬您的數位產品
                     </span>
                   </h1>
-                  <p className="text-[#A3BDD0] text-base md:text-lg lg:text-xl leading-relaxed">
+                  <p className="text-white text-base md:text-lg lg:text-xl leading-relaxed">
                     從網站、APP 到客製化系統，助您掌握市場先機。
                     <br />
                     量身訂製數位解決方案，讓企業運營更智慧、更高效！
