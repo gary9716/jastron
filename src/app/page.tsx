@@ -3,6 +3,11 @@ import Image from "next/image";
 import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 import { useEffect, useRef, useState } from "react";
 
+const getVideoPath = (path: string) => {
+  const basePath = process.env.NODE_ENV === "production" ? "/jastron" : "";
+  return `${basePath}${path}`;
+};
+
 const ShaderBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -317,7 +322,7 @@ const ServiceBlock = ({
     <div className="h-[600px] flex items-center">
       <div className="w-full h-full rounded-2xl overflow-hidden">
         <VideoSection
-          videoSrc={"/animations/crypto2.webm"}
+          videoSrc={getVideoPath("/animations/crypto2.webm")}
           isVisible={isActive}
         />
       </div>
@@ -402,11 +407,6 @@ const Home = () => {
       description: "針對不同產業需求，量身打造最適合的數位產品。",
     },
   ];
-
-  const getVideoPath = (path: string) => {
-    const basePath = process.env.NODE_ENV === "production" ? "/jastron" : "";
-    return `${basePath}${path}`;
-  };
 
   return (
     <ParallaxProvider>
