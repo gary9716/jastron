@@ -6,8 +6,8 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === "production" ? `/${repoName}` : "",
   assetPrefix: process.env.NODE_ENV === "production" ? `/${repoName}/` : "",
   images: {
-    unoptimized: true,
+    unoptimized: true, // Required for static export
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
