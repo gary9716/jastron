@@ -319,7 +319,7 @@ const ServiceBlock = ({
   isReversed?: boolean;
 }) => {
   const videoSection = (
-    <div className="h-[600px] flex items-center">
+    <div className="h-[300px] md:h-[400px] lg:h-[500px] flex items-center">
       <div className="w-full h-full rounded-2xl overflow-hidden">
         <VideoSection
           videoSrc={getVideoPath("/animations/crypto2.webm")}
@@ -330,25 +330,24 @@ const ServiceBlock = ({
   );
 
   const contentSection = (
-    <div className="h-[600px] bg-[#0755CE]/5 rounded-2xl backdrop-blur-sm flex flex-col justify-center px-12">
-      <h2 className="text-3xl font-bold text-[#2598C6] mb-4">{title}</h2>
-      <p className="text-[#A3BDD0] text-xl leading-relaxed">{description}</p>
+    <div className="h-[200px] md:h-[250px] lg:h-[500px] bg-[#0755CE]/5 rounded-2xl backdrop-blur-sm flex flex-col justify-center px-4 md:px-8 lg:px-12">
+      <h2 className="text-2xl md:text-3xl font-bold text-[#2598C6] mb-4 text-center lg:text-left">
+        {title}
+      </h2>
+      <p className="text-[#A3BDD0] text-base md:text-lg lg:text-xl leading-relaxed text-center lg:text-left max-w-3xl lg:max-w-none mx-auto lg:mx-0">
+        {description}
+      </p>
     </div>
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      {isReversed ? (
-        <>
-          {contentSection}
-          {videoSection}
-        </>
-      ) : (
-        <>
-          {videoSection}
-          {contentSection}
-        </>
-      )}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+      <div className={`${isReversed ? "lg:order-2" : "lg:order-1"} order-1`}>
+        {videoSection}
+      </div>
+      <div className={`${isReversed ? "lg:order-1" : "lg:order-2"} order-2`}>
+        {contentSection}
+      </div>
     </div>
   );
 };
@@ -419,35 +418,35 @@ const Home = () => {
           }}
           className="h-screen snap-start"
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 h-full flex flex-col">
-            <nav className="flex justify-between items-center mb-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col">
+            <nav className="flex justify-between items-center pt-4 md:pt-6 lg:pt-8">
               <Image
                 src={`${
                   process.env.NODE_ENV === "production" ? "/jastron" : ""
                 }/logo.webp`}
                 alt="Logo"
-                width={180}
+                width={120}
                 height={45}
-                className="w-[180px] h-auto"
+                className="w-[120px] md:w-[150px] lg:w-[180px] h-auto"
                 priority
               />
             </nav>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center flex-1">
-              <Parallax translateY={[-20, 20]}>
-                <div>
-                  <h1 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent">
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 items-center">
+              <Parallax translateY={[-20, 20]} className="order-2 lg:order-1">
+                <div className="text-center lg:text-left lg:max-w-xl pt-12 sm:pt-16 md:pt-20 lg:pt-0">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 lg:mb-6 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent leading-tight">
                     數位轉型，從 JASTRON 開始
                   </h1>
-                  <p className="text-[#A3BDD0] text-xl mb-8 leading-relaxed">
+                  <p className="text-[#A3BDD0] text-base md:text-lg lg:text-xl leading-relaxed">
                     專業網站、APP 開發，助企業站穩市場，邁向未來。
                   </p>
                 </div>
               </Parallax>
 
-              <Parallax translateY={[20, -20]}>
-                <div className="relative">
-                  <div className="w-full h-[500px] rounded-2xl overflow-hidden">
+              <Parallax translateY={[20, -20]} className="order-1 lg:order-2">
+                <div className="relative mx-auto max-w-2xl lg:max-w-none">
+                  <div className="w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[500px] rounded-2xl overflow-hidden">
                     <VideoSection
                       videoSrc={getVideoPath("/animations/crypto1.webm")}
                       isVisible={activeSection === 1}
@@ -466,7 +465,7 @@ const Home = () => {
             ref={(el) => {
               if (el) sectionRefs.current[index + 1] = el;
             }}
-            className="h-screen snap-start flex items-center"
+            className="min-h-screen snap-start flex items-center py-8 md:py-12"
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <ServiceBlock
