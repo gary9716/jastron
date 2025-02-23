@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
+const repoName = "jastron";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "export",
+  images: {
+    unoptimized: true, // Required for static export
+  },
+  basePath: repoName, // Replace with your GitHub repo name
+  assetPrefix: repoName,
 };
 
 export default nextConfig;
