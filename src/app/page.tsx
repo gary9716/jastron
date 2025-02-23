@@ -303,13 +303,11 @@ const VideoSection = ({
 };
 
 const ServiceBlock = ({
-  index,
   title,
   description,
   isActive,
   isReversed = false,
 }: {
-  index: number;
   title: string;
   description: string;
   isActive: boolean;
@@ -472,7 +470,6 @@ const Home = () => {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <ServiceBlock
-                index={index}
                 title={service.title}
                 description={service.description}
                 isActive={activeSection === index + 2}
