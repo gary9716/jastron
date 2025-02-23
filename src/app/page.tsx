@@ -405,6 +405,11 @@ const Home = () => {
     },
   ];
 
+  const getVideoPath = (path: string) => {
+    const basePath = process.env.NODE_ENV === "production" ? "/jastron" : "";
+    return `${basePath}${path}`;
+  };
+
   return (
     <ParallaxProvider>
       <ShaderBackground />
@@ -419,7 +424,9 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 h-full flex flex-col">
             <nav className="flex justify-between items-center mb-20">
               <Image
-                src="/logo.webp"
+                src={`${
+                  process.env.NODE_ENV === "production" ? "/jastron" : ""
+                }/logo.webp`}
                 alt="Logo"
                 width={180}
                 height={45}
@@ -444,7 +451,7 @@ const Home = () => {
                 <div className="relative">
                   <div className="w-full h-[500px] rounded-2xl overflow-hidden">
                     <VideoSection
-                      videoSrc="/animations/crypto1.webm"
+                      videoSrc={getVideoPath("/animations/crypto1.webm")}
                       isVisible={activeSection === 1}
                     />
                   </div>
