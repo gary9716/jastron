@@ -3,7 +3,7 @@ import Image from "next/image";
 import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 import { useEffect, useRef, useState } from "react";
 
-const getVideoPath = (path: string) => {
+const getResPath = (path: string) => {
   const basePath = process.env.NODE_ENV === "production" ? "/jastron" : "";
   return `${basePath}${path}`;
 };
@@ -32,7 +32,7 @@ const VideoBackground = () => {
         preload="auto"
       >
         <source
-          src={getVideoPath("/animations/background.webm")}
+          src={getResPath("/animations/background.webm")}
           type="video/webm"
         />
       </video>
@@ -129,7 +129,7 @@ const ServiceBlock = ({
     <div className="h-[300px] md:h-[400px] lg:h-[500px] flex items-center">
       <div className="w-full h-full rounded-2xl overflow-hidden">
         <VideoSection
-          videoSrc={getVideoPath("/animations/crypto2.webm")}
+          videoSrc={getResPath("/animations/crypto2.webm")}
           isVisible={isActive}
         />
       </div>
@@ -228,9 +228,7 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col">
             <nav className="flex justify-between items-center pt-4 md:pt-6 lg:pt-8">
               <Image
-                src={`${
-                  process.env.NODE_ENV === "production" ? "/jastron" : ""
-                }/logo.webp`}
+                src={getResPath("/logo.webp")}
                 alt="Logo"
                 width={120}
                 height={45}
@@ -261,7 +259,7 @@ const Home = () => {
                 <div className="relative mx-auto max-w-2xl lg:max-w-none">
                   <div className="w-full h-[200px] sm:h-[250px] md:h-[350px] lg:h-[500px] rounded-2xl overflow-hidden">
                     <VideoSection
-                      videoSrc={getVideoPath("/animations/crypto1.webm")}
+                      videoSrc={getResPath("/animations/crypto1.webm")}
                       isVisible={activeSection === 1}
                     />
                   </div>
