@@ -179,8 +179,8 @@ const ServiceCard = ({
   }, [icon]);
 
   return (
-    <div className="flex flex-col items-center text-center p-4 md:p-6">
-      <div className="w-16 h-16 md:w-24 md:h-24 mb-2 md:mb-4">
+    <div className="flex flex-col items-center text-center p-2 md:p-4">
+      <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 mb-2">
         {animationData && (
           <Lottie
             animationData={animationData}
@@ -190,10 +190,10 @@ const ServiceCard = ({
           />
         )}
       </div>
-      <h3 className="text-xl md:text-2xl font-bold text-[#2598C6] mb-2">
+      <h3 className="text-base md:text-lg lg:text-xl font-bold text-[#2598C6] mb-1">
         {title}
       </h3>
-      <p className="text-white text-sm md:text-base hidden md:block">{description}</p>
+      <p className="text-white text-xs md:text-sm hidden md:block">{description}</p>
     </div>
   );
 };
@@ -220,7 +220,7 @@ const CaseStudyCard = ({
   description: string;
 }) => (
   <div className="flex flex-col">
-    <div className="relative h-[200px] md:h-[300px] rounded-lg overflow-hidden mb-4">
+    <div className="relative h-[140px] md:h-[200px] rounded-lg overflow-hidden mb-3">
       <Image
         src={getResPath(`/cases/${image}`)}
         alt={title}
@@ -228,8 +228,8 @@ const CaseStudyCard = ({
         className="object-cover"
       />
     </div>
-    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-    <p className="text-white/80 text-sm">{description}</p>
+    <h3 className="text-base md:text-lg font-bold text-white mb-1">{title}</h3>
+    <p className="text-white/80 text-xs md:text-sm">{description}</p>
   </div>
 );
 
@@ -357,25 +357,34 @@ const Home = () => {
               }}
             >
               {/* Hero Section */}
-              <div className="min-h-screen pt-20 flex items-center">
+              <div className="min-h-screen pt-14 flex items-center">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 items-center">
                     <div className="text-center lg:text-left">
-                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent">
+                      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent">
                         JASTRON
                         <br />
-                        <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                        <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl">
                           打造專屬您的數位產品
                         </span>
                       </h1>
-                      <p className="text-white text-base md:text-lg lg:text-xl leading-relaxed">
+                      <p className="text-white text-sm leading-relaxed">
                         從網站、APP 到客製化系統，助您掌握市場先機。
                         <br />
                         量身訂製數位解決方案，讓企業運營更智慧、更高效！
                       </p>
                     </div>
                     <div className="relative">
-                      <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-[#2598C6]/20 to-[#0755CE]/20">
+                      <div className="w-full h-[160px] sm:h-[200px] md:h-[240px] lg:h-[280px] rounded-2xl overflow-hidden">
+                        <video
+                          className="w-full h-full object-contain"
+                          loop
+                          muted
+                          autoPlay
+                          playsInline
+                        >
+                          <source src={getResPath("/animations/jastron-kanban.webm")} type="video/webm" />
+                        </video>
                       </div>
                     </div>
                   </div>
@@ -396,12 +405,12 @@ const Home = () => {
               }}
             >
               {/* 服務區塊 */}
-              <section className="min-h-screen py-20 flex items-center">
+              <section className="min-h-screen py-8 md:py-12 flex items-center">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+                  <h2 className="text-xl md:text-2xl font-bold text-center text-white mb-6">
                     我們的服務
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
                     <ServiceCard
                       icon="cybersecurity"
                       title="專業網站與APP開發"
@@ -450,9 +459,9 @@ const Home = () => {
               }}
             >
               {/* 合作夥伴 */}
-              <section className="min-h-screen py-20 flex items-center bg-black/30">
+              <section className="min-h-screen py-12 md:py-16 flex items-center bg-black/30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+                  <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-8">
                     合作夥伴
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -481,9 +490,9 @@ const Home = () => {
               {/* 案例展示和頁尾 */}
               <div className="h-screen flex flex-col">
                 {/* 案例展示 */}
-                <section className="flex-1 flex flex-col justify-center py-10">
+                <section className="flex-1 flex flex-col justify-center py-8">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-8">
+                    <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-6">
                       案例展示
                     </h2>
                     <div className="relative px-12">
