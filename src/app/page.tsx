@@ -235,7 +235,7 @@ const CaseStudyCard = ({
 
 const Home = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const sections = 5; // 總區塊數
+  const sections = 4; // 總區塊數改為 4
   const currentSection = useSmoothScroll(sections);
 
   useEffect(() => {
@@ -409,123 +409,115 @@ const Home = () => {
                 transition: 'transform 1s ease-in-out'
               }}
             >
-              {/* 案例展示 */}
-              <section className="min-h-screen py-20 flex items-center">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
-                    案例展示
-                  </h2>
-                  <div className="relative">
-                    <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
-                      <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 19l-7-7 7-7"
+              {/* 案例展示和頁尾 */}
+              <div className="h-screen flex flex-col">
+                {/* 案例展示 */}
+                <section className="flex-1 flex flex-col justify-center py-10">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-8">
+                      案例展示
+                    </h2>
+                    <div className="relative px-12">
+                      <button className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <CaseStudyCard
+                          image="case1.png"
+                          title="Title 001"
+                          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                         />
-                      </svg>
-                    </button>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-12">
-                      <CaseStudyCard
-                        image="case1.png"
-                        title="Title 001"
-                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                      />
-                      <CaseStudyCard
-                        image="case2.png"
-                        title="Title 002"
-                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                      />
+                        <CaseStudyCard
+                          image="case2.png"
+                          title="Title 002"
+                          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        />
+                      </div>
+                      <button className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors">
+                        <svg
+                          className="w-6 h-6 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
                     </div>
-                    <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
-                      <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
                   </div>
-                </div>
-              </section>
-            </div>
+                </section>
 
-            <div 
-              ref={(el) => {
-                if (sectionRefs.current) {
-                  sectionRefs.current[4] = el;
-                }
-              }}
-              className="section absolute w-full h-screen"
-              style={{
-                transform: `translateY(${(4-currentSection) * 100}vh)`,
-                transition: 'transform 1s ease-in-out'
-              }}
-            >
-              {/* 頁尾 */}
-              <footer className="min-h-screen py-12 flex items-center bg-black/30">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                      <Image
-                        src={getResPath("/logo.webp")}
-                        alt="Logo"
-                        width={120}
-                        height={45}
-                        className="mb-6"
-                      />
-                      <div className="flex space-x-6">
-                        <a href="#" className="text-white/60 hover:text-white">關於我們</a>
-                        <a href="#" className="text-white/60 hover:text-white">服務項目</a>
-                        <a href="#" className="text-white/60 hover:text-white">作品集</a>
-                        <a href="#" className="text-white/60 hover:text-white">聯絡我們</a>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <p className="text-white mb-4">訂閱電子報，隨時掌握最新資訊！</p>
-                      <div className="flex">
-                        <input
-                          type="email"
-                          placeholder="輸入您的 email"
-                          className="bg-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none"
+                {/* 頁尾 */}
+                <footer className="bg-black/30 py-8">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-8">
+                      <div>
+                        <Image
+                          src={getResPath("/logo.webp")}
+                          alt="Logo"
+                          width={120}
+                          height={45}
+                          className="mb-6"
                         />
-                        <button className="bg-[#2598C6] text-white px-6 py-2 rounded-r-full hover:bg-[#1b7aa1]">
-                          送出
-                        </button>
+                        <div className="flex flex-wrap gap-6">
+                          <a href="#" className="text-white/60 hover:text-white">關於我們</a>
+                          <a href="#" className="text-white/60 hover:text-white">服務項目</a>
+                          <a href="#" className="text-white/60 hover:text-white">作品集</a>
+                          <a href="#" className="text-white/60 hover:text-white">聯絡我們</a>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start md:items-end">
+                        <p className="text-white mb-4">訂閱電子報，隨時掌握最新資訊！</p>
+                        <div className="flex w-full md:w-auto">
+                          <input
+                            type="email"
+                            placeholder="輸入您的 email"
+                            className="w-full md:w-64 bg-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none focus:bg-white/20 transition-colors"
+                          />
+                          <button className="bg-[#2598C6] text-white px-6 py-2 rounded-r-full hover:bg-[#1b7aa1] transition-colors whitespace-nowrap">
+                            送出
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t border-white/10 pt-8">
+                      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="text-white/60 text-sm text-center md:text-left">
+                          © 2024 佳仕宸有限公司 All rights reserved
+                        </div>
+                        <div className="flex flex-wrap justify-center md:justify-end gap-6 text-sm">
+                          <a href="#" className="text-white/60 hover:text-white">
+                            Privacy Policy
+                          </a>
+                          <a href="#" className="text-white/60 hover:text-white">
+                            Terms of Service
+                          </a>
+                          <a href="#" className="text-white/60 hover:text-white">
+                            Cookies Settings
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="border-t border-white/10 mt-8 pt-8 flex justify-between items-center">
-                    <div className="text-white/60 text-sm">
-                      © 2024 佳仕宸有限公司 All rights reserved
-                    </div>
-                    <div className="flex space-x-6 text-sm">
-                      <a href="#" className="text-white/60 hover:text-white">
-                        Privacy Policy
-                      </a>
-                      <a href="#" className="text-white/60 hover:text-white">
-                        Terms of Service
-                      </a>
-                      <a href="#" className="text-white/60 hover:text-white">
-                        Cookies Settings
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </footer>
+                </footer>
+              </div>
             </div>
           </div>
         </ParallaxProvider>
