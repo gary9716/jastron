@@ -380,11 +380,11 @@ const Home = () => {
                   合作夥伴
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                  <PartnerLogo src="partner1.png" alt="Partner 1" />
-                  <PartnerLogo src="partner2.png" alt="Partner 2" />
-                  <PartnerLogo src="partner3.png" alt="Partner 3" />
-                  <PartnerLogo src="partner4.png" alt="Partner 4" />
-                  <PartnerLogo src="partner5.png" alt="Partner 5" />
+                  <PartnerLogo src="partner1.svg" alt="Partner 1" />
+                  <PartnerLogo src="partner2.svg" alt="Partner 2" />
+                  <PartnerLogo src="partner3.svg" alt="Partner 3" />
+                  <PartnerLogo src="partner4.svg" alt="Partner 4" />
+                  <PartnerLogo src="partner5.svg" alt="Partner 5" />
                 </div>
               </div>
             </section>
@@ -492,7 +492,7 @@ const Home = () => {
                 </div>
                 <div className="border-t border-white/10 mt-8 pt-8 flex justify-between items-center">
                   <div className="text-white/60 text-sm">
-                    © 2024 傑思創意設計 All rights reserved
+                    © 2024 佳仕宸有限公司 All rights reserved
                   </div>
                   <div className="flex space-x-6 text-sm">
                     <a href="#" className="text-white/60 hover:text-white">
