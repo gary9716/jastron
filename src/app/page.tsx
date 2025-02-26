@@ -179,8 +179,8 @@ const ServiceCard = ({
   }, [icon]);
 
   return (
-    <div className="flex flex-col items-center text-center p-6">
-      <div className="w-24 h-24 mb-4">
+    <div className="flex flex-col items-center text-center p-4 md:p-6">
+      <div className="w-16 h-16 md:w-24 md:h-24 mb-2 md:mb-4">
         {animationData && (
           <Lottie
             animationData={animationData}
@@ -193,7 +193,7 @@ const ServiceCard = ({
       <h3 className="text-xl md:text-2xl font-bold text-[#2598C6] mb-2">
         {title}
       </h3>
-      <p className="text-white text-sm md:text-base">{description}</p>
+      <p className="text-white text-sm md:text-base hidden md:block">{description}</p>
     </div>
   );
 };
@@ -237,6 +237,19 @@ const Home = () => {
   const [isMounted, setIsMounted] = useState(false);
   const sections = 4; // 總區塊數改為 4
   const currentSection = useSmoothScroll(sections);
+  const [currentCase, setCurrentCase] = useState(0);
+  const cases = [
+    {
+      image: "case1.png",
+      title: "Title 001",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    {
+      image: "case2.png",
+      title: "Title 002",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    }
+  ];
 
   useEffect(() => {
     setIsMounted(true);
@@ -332,7 +345,7 @@ const Home = () => {
                   <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
                     我們的服務
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                     <ServiceCard
                       icon="cybersecurity"
                       title="專業網站與APP開發"
@@ -418,7 +431,10 @@ const Home = () => {
                       案例展示
                     </h2>
                     <div className="relative px-12">
-                      <button className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors">
+                      <button 
+                        className="absolute -left-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors"
+                        onClick={() => setCurrentCase((prev) => (prev > 0 ? prev - 1 : cases.length - 1))}
+                      >
                         <svg
                           className="w-6 h-6 text-white"
                           fill="none"
@@ -434,18 +450,17 @@ const Home = () => {
                         </svg>
                       </button>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <CaseStudyCard
-                          image="case1.png"
-                          title="Title 001"
-                          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                        />
-                        <CaseStudyCard
-                          image="case2.png"
-                          title="Title 002"
-                          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                        />
+                        <div className="md:block">
+                          <CaseStudyCard {...cases[currentCase]} />
+                        </div>
+                        <div className="hidden md:block">
+                          <CaseStudyCard {...cases[(currentCase + 1) % cases.length]} />
+                        </div>
                       </div>
-                      <button className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors">
+                      <button 
+                        className="absolute -right-6 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full z-10 hover:bg-white/20 transition-colors"
+                        onClick={() => setCurrentCase((prev) => (prev < cases.length - 1 ? prev + 1 : 0))}
+                      >
                         <svg
                           className="w-6 h-6 text-white"
                           fill="none"
@@ -527,24 +542,6 @@ const Home = () => {
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
-
-      {/* 添加導航點 */}
-      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
-        {Array.from({length: sections}).map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 my-2 rounded-full cursor-pointer transition-all duration-300 ${
-              currentSection === index ? 'bg-[#2598C6] scale-125' : 'bg-white/50'
-            }`}
-            onClick={() => {
-              window.scrollTo({
-                top: index * SECTION_HEIGHT,
-                behavior: 'smooth'
-              });
-            }}
-          />
-        ))}
-      </div>
     </div>
   );
 };
