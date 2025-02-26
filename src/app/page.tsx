@@ -238,6 +238,7 @@ const Home = () => {
   const sections = 4; // 總區塊數改為 4
   const currentSection = useSmoothScroll(sections);
   const [currentCase, setCurrentCase] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cases = [
     {
       image: "case1.png",
@@ -280,12 +281,67 @@ const Home = () => {
                     <a href="#" className="text-white hover:text-[#2598C6]">作品集</a>
                     <a href="#" className="text-white hover:text-[#2598C6]">聯絡我們</a>
                   </div>
-                  <button className="text-white bg-[#2598C6]/20 px-4 py-2 rounded-full hover:bg-[#2598C6]/30">
-                    繁體中文
-                  </button>
+                  <div className="flex items-center gap-4">
+                    <button className="text-white bg-[#2598C6]/20 px-4 py-2 rounded-full hover:bg-[#2598C6]/30">
+                      繁體中文
+                    </button>
+                    {/* 手機版選單按鈕 */}
+                    <button 
+                      className="md:hidden text-white p-2"
+                      onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
+                      <svg 
+                        className="w-6 h-6" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </nav>
+
+            {/* 手機版選單 Drawer */}
+            <div 
+              className={`fixed top-0 right-0 h-full w-64 bg-black/95 backdrop-blur-lg transform transition-transform duration-300 ease-in-out z-50 ${
+                isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+              }`}
+            >
+              <div className="flex flex-col p-6">
+                <button 
+                  className="self-end text-white mb-8"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg 
+                    className="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                <div className="flex flex-col space-y-6">
+                  <a href="#" className="text-white hover:text-[#2598C6] text-lg">關於我們</a>
+                  <a href="#" className="text-white hover:text-[#2598C6] text-lg">服務項目</a>
+                  <a href="#" className="text-white hover:text-[#2598C6] text-lg">作品集</a>
+                  <a href="#" className="text-white hover:text-[#2598C6] text-lg">聯絡我們</a>
+                </div>
+              </div>
+            </div>
 
             {/* 各個區塊使用絕對定位 */}
             <div 
