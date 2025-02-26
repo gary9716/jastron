@@ -9,6 +9,49 @@ const getResPath = (path: string) => {
   return `${basePath}${path}`;
 };
 
+// 定義每個區塊的高度
+const SECTION_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 0;
+
+// 處理滾動邏輯的自定義 Hook
+const useSmoothScroll = (sections: number) => {
+  const [currentSection, setCurrentSection] = useState(0);
+  const isScrolling = useRef(false);
+  const lastScrollTime = useRef(Date.now());
+
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      
+      const now = Date.now();
+      if (now - lastScrollTime.current < 1000 || isScrolling.current) return;
+      
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const nextSection = Math.max(0, Math.min(sections - 1, currentSection + direction));
+      
+      if (nextSection !== currentSection) {
+        isScrolling.current = true;
+        lastScrollTime.current = now;
+        
+        window.scrollTo({
+          top: nextSection * SECTION_HEIGHT,
+          behavior: 'smooth'
+        });
+        
+        setCurrentSection(nextSection);
+        
+        setTimeout(() => {
+          isScrolling.current = false;
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [currentSection, sections]);
+
+  return currentSection;
+};
+
 const VideoBackground = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -191,71 +234,22 @@ const CaseStudyCard = ({
 );
 
 const Home = () => {
-  const [activeSection, setActiveSection] = useState(1);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isMounted, setIsMounted] = useState(false);
+  const sections = 5; // 總區塊數
+  const currentSection = useSmoothScroll(sections);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = sectionRefs.current.findIndex(
-              (ref) => ref === entry.target
-            );
-            if (index !== -1) {
-              setActiveSection(index + 1);
-            }
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    sectionRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const services = [
-    {
-      title: "專業網站與APP開發",
-      description: "為企業量身打造，高效、美觀且易於管理的網站與行動應用程式。",
-    },
-    {
-      title: "客製化系統開發",
-      description: "依據企業需求，打造專屬系統，提升營運效率與競爭力。",
-    },
-    {
-      title: "企業數位轉型夥伴",
-      description: "提供全方位數位解決方案，助力企業迎向智慧未來。",
-    },
-    {
-      title: "打造極致用戶體驗",
-      description: "以設計與技術並重，創造流暢、直覺的數位產品體驗。",
-    },
-    {
-      title: "從概念到實現，全程支援",
-      description: "由專業團隊提供策略、設計、開發到維護的一站式服務。",
-    },
-    {
-      title: "專屬解決方案，滿足企業需求",
-      description: "針對不同產業需求，量身打造最適合的數位產品。",
-    },
-  ];
+  const sectionRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-hidden">
       {isMounted && (
         <ParallaxProvider>
           <VideoBackground />
-          <div className="min-h-screen">
+          <div className="min-h-screen relative">
             {/* 導航欄 */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -268,30 +262,10 @@ const Home = () => {
                     className="w-[120px] md:w-[150px] h-auto"
                   />
                   <div className="hidden md:flex space-x-8">
-                    <a
-                      href="#about"
-                      className="text-white hover:text-[#2598C6]"
-                    >
-                      關於我們
-                    </a>
-                    <a
-                      href="#services"
-                      className="text-white hover:text-[#2598C6]"
-                    >
-                      服務項目
-                    </a>
-                    <a
-                      href="#works"
-                      className="text-white hover:text-[#2598C6]"
-                    >
-                      作品集
-                    </a>
-                    <a
-                      href="#contact"
-                      className="text-white hover:text-[#2598C6]"
-                    >
-                      聯絡我們
-                    </a>
+                    <a href="#" className="text-white hover:text-[#2598C6]">關於我們</a>
+                    <a href="#" className="text-white hover:text-[#2598C6]">服務項目</a>
+                    <a href="#" className="text-white hover:text-[#2598C6]">作品集</a>
+                    <a href="#" className="text-white hover:text-[#2598C6]">聯絡我們</a>
                   </div>
                   <button className="text-white bg-[#2598C6]/20 px-4 py-2 rounded-full hover:bg-[#2598C6]/30">
                     繁體中文
@@ -300,214 +274,259 @@ const Home = () => {
               </div>
             </nav>
 
-            {/* Hero Section */}
-            <div className="min-h-screen pt-20 flex items-center">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                  <div className="text-center lg:text-left">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent">
-                      JASTRON
-                      <br />
-                      <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-                        打造專屬您的數位產品
-                      </span>
-                    </h1>
-                    <p className="text-white text-base md:text-lg lg:text-xl leading-relaxed">
-                      從網站、APP 到客製化系統，助您掌握市場先機。
-                      <br />
-                      量身訂製數位解決方案，讓企業運營更智慧、更高效！
-                    </p>
-                  </div>
-                  <div className="relative">
-                    <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-[#2598C6]/20 to-[#0755CE]/20">
-                      {/* 移除了 Lottie 動畫，改為漸層背景 */}
+            {/* 各個區塊使用絕對定位 */}
+            <div 
+              ref={(el) => {
+                if (sectionRefs.current) {
+                  sectionRefs.current[0] = el;
+                }
+              }}
+              className="section absolute w-full h-screen"
+              style={{
+                transform: `translateY(${-currentSection * 100}vh)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {/* Hero Section */}
+              <div className="min-h-screen pt-20 flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div className="text-center lg:text-left">
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-[#2598C6] to-[#0755CE] bg-clip-text text-transparent">
+                        JASTRON
+                        <br />
+                        <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                          打造專屬您的數位產品
+                        </span>
+                      </h1>
+                      <p className="text-white text-base md:text-lg lg:text-xl leading-relaxed">
+                        從網站、APP 到客製化系統，助您掌握市場先機。
+                        <br />
+                        量身訂製數位解決方案，讓企業運營更智慧、更高效！
+                      </p>
+                    </div>
+                    <div className="relative">
+                      <div className="w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-[#2598C6]/20 to-[#0755CE]/20">
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 服務區塊 */}
-            <section className="py-20 relative">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
-                  我們的服務
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <ServiceCard
-                    icon="cybersecurity"
-                    title="專業網站與APP開發"
-                    description="為企業量身打造，高效、美觀且易於管理的網站與行動應用程式。"
-                  />
-                  <ServiceCard
-                    icon="vip"
-                    title="客製化系統開發"
-                    description="依據企業需求，打造專屬系統，提升營運效率與競爭力。"
-                  />
-                  <ServiceCard
-                    icon="light-bulb"
-                    title="企業數位轉型夥伴"
-                    description="提供全方位數位解決方案，助力企業迎向智慧未來。"
-                  />
-                  <ServiceCard
-                    icon="happy"
-                    title="打造極致用戶體驗"
-                    description="以設計與技術並重，創造流暢、直覺的數位產品體驗。"
-                  />
-                  <ServiceCard
-                    icon="declaration"
-                    title="從概念到實現，全程支援"
-                    description="由專業團隊提供策略、設計、開發到維護的一站式服務。"
-                  />
-                  <ServiceCard
-                    icon="launch"
-                    title="專屬解決方案，滿足企業需求"
-                    description="針對不同產業需求，量身打造最適合的數位產品。"
-                  />
-                </div>
-                <div className="text-center mt-12">
-                  <button className="bg-[#2598C6] text-white px-8 py-3 rounded-full hover:bg-[#1b7aa1] transition-colors">
-                    More
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            {/* 合作夥伴 */}
-            <section className="py-20 bg-black/30">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
-                  合作夥伴
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                  <PartnerLogo src="partner1.svg" alt="Partner 1" />
-                  <PartnerLogo src="partner2.svg" alt="Partner 2" />
-                  <PartnerLogo src="partner3.svg" alt="Partner 3" />
-                  <PartnerLogo src="partner4.svg" alt="Partner 4" />
-                  <PartnerLogo src="partner5.svg" alt="Partner 5" />
-                </div>
-              </div>
-            </section>
-
-            {/* 案例展示 */}
-            <section className="py-20">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
-                  案例展示
-                </h2>
-                <div className="relative">
-                  <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-12">
-                    <CaseStudyCard
-                      image="case1.png"
-                      title="Title 001"
-                      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            <div 
+              ref={(el) => {
+                if (sectionRefs.current) {
+                  sectionRefs.current[1] = el;
+                }
+              }}
+              className="section absolute w-full h-screen"
+              style={{
+                transform: `translateY(${(1-currentSection) * 100}vh)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {/* 服務區塊 */}
+              <section className="min-h-screen py-20 flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+                    我們的服務
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <ServiceCard
+                      icon="cybersecurity"
+                      title="專業網站與APP開發"
+                      description="為企業量身打造，高效、美觀且易於管理的網站與行動應用程式。"
                     />
-                    <CaseStudyCard
-                      image="case2.png"
-                      title="Title 002"
-                      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                    <ServiceCard
+                      icon="vip"
+                      title="客製化系統開發"
+                      description="依據企業需求，打造專屬系統，提升營運效率與競爭力。"
+                    />
+                    <ServiceCard
+                      icon="light-bulb"
+                      title="企業數位轉型夥伴"
+                      description="提供全方位數位解決方案，助力企業迎向智慧未來。"
+                    />
+                    <ServiceCard
+                      icon="happy"
+                      title="打造極致用戶體驗"
+                      description="以設計與技術並重，創造流暢、直覺的數位產品體驗。"
+                    />
+                    <ServiceCard
+                      icon="declaration"
+                      title="從概念到實現，全程支援"
+                      description="由專業團隊提供策略、設計、開發到維護的一站式服務。"
+                    />
+                    <ServiceCard
+                      icon="launch"
+                      title="專屬解決方案，滿足企業需求"
+                      description="針對不同產業需求，量身打造最適合的數位產品。"
                     />
                   </div>
-                  <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
-                    <svg
-                      className="w-6 h-6 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
                 </div>
-                <div className="text-center mt-12">
-                  <button className="bg-[#2598C6] text-white px-8 py-3 rounded-full hover:bg-[#1b7aa1] transition-colors">
-                    More
-                  </button>
-                </div>
-              </div>
-            </section>
+              </section>
+            </div>
 
-            {/* 頁尾 */}
-            <footer className="bg-black/30 py-12">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                  <div>
-                    <Image
-                      src={getResPath("/logo.webp")}
-                      alt="Logo"
-                      width={120}
-                      height={45}
-                      className="mb-6"
-                    />
-                    <div className="flex space-x-6">
+            <div 
+              ref={(el) => {
+                if (sectionRefs.current) {
+                  sectionRefs.current[2] = el;
+                }
+              }}
+              className="section absolute w-full h-screen"
+              style={{
+                transform: `translateY(${(2-currentSection) * 100}vh)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {/* 合作夥伴 */}
+              <section className="min-h-screen py-20 flex items-center bg-black/30">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+                    合作夥伴
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                    <PartnerLogo src="partner1.svg" alt="Partner 1" />
+                    <PartnerLogo src="partner2.svg" alt="Partner 2" />
+                    <PartnerLogo src="partner3.svg" alt="Partner 3" />
+                    <PartnerLogo src="partner4.svg" alt="Partner 4" />
+                    <PartnerLogo src="partner5.svg" alt="Partner 5" />
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div 
+              ref={(el) => {
+                if (sectionRefs.current) {
+                  sectionRefs.current[3] = el;
+                }
+              }}
+              className="section absolute w-full h-screen"
+              style={{
+                transform: `translateY(${(3-currentSection) * 100}vh)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {/* 案例展示 */}
+              <section className="min-h-screen py-20 flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+                    案例展示
+                  </h2>
+                  <div className="relative">
+                    <button className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                    </button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-12">
+                      <CaseStudyCard
+                        image="case1.png"
+                        title="Title 001"
+                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                      />
+                      <CaseStudyCard
+                        image="case2.png"
+                        title="Title 002"
+                        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                      />
+                    </div>
+                    <button className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/10 p-2 rounded-full">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div 
+              ref={(el) => {
+                if (sectionRefs.current) {
+                  sectionRefs.current[4] = el;
+                }
+              }}
+              className="section absolute w-full h-screen"
+              style={{
+                transform: `translateY(${(4-currentSection) * 100}vh)`,
+                transition: 'transform 1s ease-in-out'
+              }}
+            >
+              {/* 頁尾 */}
+              <footer className="min-h-screen py-12 flex items-center bg-black/30">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                      <Image
+                        src={getResPath("/logo.webp")}
+                        alt="Logo"
+                        width={120}
+                        height={45}
+                        className="mb-6"
+                      />
+                      <div className="flex space-x-6">
+                        <a href="#" className="text-white/60 hover:text-white">關於我們</a>
+                        <a href="#" className="text-white/60 hover:text-white">服務項目</a>
+                        <a href="#" className="text-white/60 hover:text-white">作品集</a>
+                        <a href="#" className="text-white/60 hover:text-white">聯絡我們</a>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <p className="text-white mb-4">訂閱電子報，隨時掌握最新資訊！</p>
+                      <div className="flex">
+                        <input
+                          type="email"
+                          placeholder="輸入您的 email"
+                          className="bg-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none"
+                        />
+                        <button className="bg-[#2598C6] text-white px-6 py-2 rounded-r-full hover:bg-[#1b7aa1]">
+                          送出
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="border-t border-white/10 mt-8 pt-8 flex justify-between items-center">
+                    <div className="text-white/60 text-sm">
+                      © 2024 佳仕宸有限公司 All rights reserved
+                    </div>
+                    <div className="flex space-x-6 text-sm">
                       <a href="#" className="text-white/60 hover:text-white">
-                        關於我們
+                        Privacy Policy
                       </a>
                       <a href="#" className="text-white/60 hover:text-white">
-                        服務項目
+                        Terms of Service
                       </a>
                       <a href="#" className="text-white/60 hover:text-white">
-                        作品集
-                      </a>
-                      <a href="#" className="text-white/60 hover:text-white">
-                        聯絡我們
+                        Cookies Settings
                       </a>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <p className="text-white mb-4">
-                      訂閱電子報，隨時掌握最新資訊！
-                    </p>
-                    <div className="flex">
-                      <input
-                        type="email"
-                        placeholder="輸入您的 email"
-                        className="bg-white/10 text-white px-4 py-2 rounded-l-full focus:outline-none"
-                      />
-                      <button className="bg-[#2598C6] text-white px-6 py-2 rounded-r-full hover:bg-[#1b7aa1]">
-                        送出
-                      </button>
-                    </div>
-                  </div>
                 </div>
-                <div className="border-t border-white/10 mt-8 pt-8 flex justify-between items-center">
-                  <div className="text-white/60 text-sm">
-                    © 2024 佳仕宸有限公司 All rights reserved
-                  </div>
-                  <div className="flex space-x-6 text-sm">
-                    <a href="#" className="text-white/60 hover:text-white">
-                      Privacy Policy
-                    </a>
-                    <a href="#" className="text-white/60 hover:text-white">
-                      Terms of Service
-                    </a>
-                    <a href="#" className="text-white/60 hover:text-white">
-                      Cookies Settings
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </footer>
+              </footer>
+            </div>
           </div>
         </ParallaxProvider>
       )}
@@ -516,6 +535,24 @@ const Home = () => {
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
+
+      {/* 添加導航點 */}
+      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
+        {Array.from({length: sections}).map((_, index) => (
+          <div
+            key={index}
+            className={`w-3 h-3 my-2 rounded-full cursor-pointer transition-all duration-300 ${
+              currentSection === index ? 'bg-[#2598C6] scale-125' : 'bg-white/50'
+            }`}
+            onClick={() => {
+              window.scrollTo({
+                top: index * SECTION_HEIGHT,
+                behavior: 'smooth'
+              });
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 };
